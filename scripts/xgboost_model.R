@@ -76,7 +76,7 @@ param <- list("objective" = "reg:linear",
               "bst:max_depth" = 7,
               "min_child_weight" = 5,
               "subsample" = .8,
-              "colsample_bytree" = .85,
+              "colsample_bytree" = .9,
               "scale_pos_weight" = 1)
 offset = 5000
 nround = 375
@@ -190,4 +190,4 @@ predTotal = pred + pred2 + pred3 + pred4 + pred5 + pred6 + pred7 + pred8 + pred9
 # Output submission
 predTotal = format(predTotal, digits=8,scientific=F)
 submission = data.frame(Id = test$Id,Hazard=predTotal)
-write.csv(submission,file='../submissions/xgboost_model_13.csv', quote=FALSE,row.names=FALSE)
+write.csv(submission,file='../submissions/xgboost_model_14.csv', quote=FALSE,row.names=FALSE)
