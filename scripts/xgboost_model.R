@@ -3,6 +3,9 @@ library(xgboost)
 library(Matrix)
 library(methods)
 
+# set seed
+set.seed(1337)
+
 # read data
 train <- read.csv("../input/train.csv", stringsAsFactors = FALSE)
 test <- read.csv("../input/test.csv", stringsAsFactors = FALSE)
@@ -80,24 +83,17 @@ param <- list("objective" = "reg:linear",
               "scale_pos_weight" = 1)
 offset = 5000
 nround = 2000
-
+early_stopping = 6
 
 y = log(y)
 xgtrain = xgb.DMatrix(data = x[1:offset,], label=y[1:offset])
 xgval = xgb.DMatrix(data = x[offset:nrow(train),], label=y[offset:nrow(train)])
 watchlist = list(valid = xgval, train = xgtrain)
 
-# Run Cross Valication
-# bst.cv = xgb.cv(param=param, data = xgtrain, nfold = 3,
-#                nrounds=nround, watchlist=watchlist, early.stop.round = 4,
-#                 maximize = FALSE)
-# [344]	train-rmse:2.933319+0.098488	test-rmse:3.847580+0.177589  ## ALL hot-ones
-
 # Train the model
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
-                watchlist=watchlist, maximize = FALSE, early.stop.round = 4)
-# [1999]	train-rmse:1.436350	valid-rmse:3.914722 ## ALL hot-ones
-# [1999]	train-rmse:2.688771	valid-rmse:2.700901 ## only 2 most important hot-ones
+                watchlist=watchlist, maximize = FALSE, 
+                early.stop.round = early_stopping)
 
 # Make prediction
 pred = predict(bst,x[teind,])
@@ -108,7 +104,8 @@ xgtrain = xgb.DMatrix(data = x[testList,], label=y[testList])
 xgval = xgb.DMatrix(data = x[(1:nrow(train))[-testList],], label=y[(1:nrow(train))[-testList]])
 watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
-                watchlist=watchlist, maximize = FALSE, early.stop.round = 4)
+                watchlist=watchlist, maximize = FALSE, 
+                early.stop.round = early_stopping)
 
 pred2 = predict(bst,x[teind,])
 
@@ -117,7 +114,8 @@ xgtrain = xgb.DMatrix(data = x[testList,], label=y[testList])
 xgval = xgb.DMatrix(data = x[(1:nrow(train))[-testList],], label=y[(1:nrow(train))[-testList]])
 watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
-                watchlist=watchlist, maximize = FALSE, early.stop.round = 4)
+                watchlist=watchlist, maximize = FALSE, 
+                early.stop.round = early_stopping)
 
 pred3 = predict(bst,x[teind,])
 
@@ -126,7 +124,8 @@ xgtrain = xgb.DMatrix(data = x[testList,], label=y[testList])
 xgval = xgb.DMatrix(data = x[(1:nrow(train))[-testList],], label=y[(1:nrow(train))[-testList]])
 watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
-                watchlist=watchlist, maximize = FALSE, early.stop.round = 4)
+                watchlist=watchlist, maximize = FALSE, 
+                early.stop.round = early_stopping)
 
 pred4 = predict(bst,x[teind,])
 
@@ -135,7 +134,8 @@ xgtrain = xgb.DMatrix(data = x[testList,], label=y[testList])
 xgval = xgb.DMatrix(data = x[(1:nrow(train))[-testList],], label=y[(1:nrow(train))[-testList]])
 watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
-                watchlist=watchlist, maximize = FALSE, early.stop.round = 4)
+                watchlist=watchlist, maximize = FALSE, 
+                early.stop.round = early_stopping)
 
 pred5 = predict(bst,x[teind,])
 
@@ -144,7 +144,8 @@ xgtrain = xgb.DMatrix(data = x[testList,], label=y[testList])
 xgval = xgb.DMatrix(data = x[(1:nrow(train))[-testList],], label=y[(1:nrow(train))[-testList]])
 watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
-                watchlist=watchlist, maximize = FALSE, early.stop.round = 4)
+                watchlist=watchlist, maximize = FALSE, 
+                early.stop.round = early_stopping)
 
 pred6 = predict(bst,x[teind,])
 
@@ -153,7 +154,8 @@ xgtrain = xgb.DMatrix(data = x[testList,], label=y[testList])
 xgval = xgb.DMatrix(data = x[(1:nrow(train))[-testList],], label=y[(1:nrow(train))[-testList]])
 watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
-                watchlist=watchlist, maximize = FALSE, early.stop.round = 4)
+                watchlist=watchlist, maximize = FALSE, 
+                early.stop.round = early_stopping)
 
 pred7 = predict(bst,x[teind,])
 
@@ -162,7 +164,8 @@ xgtrain = xgb.DMatrix(data = x[testList,], label=y[testList])
 xgval = xgb.DMatrix(data = x[(1:nrow(train))[-testList],], label=y[(1:nrow(train))[-testList]])
 watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
-                watchlist=watchlist, maximize = FALSE, early.stop.round = 4)
+                watchlist=watchlist, maximize = FALSE, 
+                early.stop.round = early_stopping)
 
 pred8 = predict(bst,x[teind,])
 
@@ -171,7 +174,8 @@ xgtrain = xgb.DMatrix(data = x[testList,], label=y[testList])
 xgval = xgb.DMatrix(data = x[(1:nrow(train))[-testList],], label=y[(1:nrow(train))[-testList]])
 watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
-                watchlist=watchlist, maximize = FALSE, early.stop.round = 4)
+                watchlist=watchlist, maximize = FALSE, 
+                early.stop.round = early_stopping)
 
 pred9 = predict(bst,x[teind,])
 
@@ -180,7 +184,8 @@ xgtrain = xgb.DMatrix(data = x[testList,], label=y[testList])
 xgval = xgb.DMatrix(data = x[(1:nrow(train))[-testList],], label=y[(1:nrow(train))[-testList]])
 watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
-                watchlist=watchlist, maximize = FALSE, early.stop.round = 4)
+                watchlist=watchlist, maximize = FALSE, 
+                early.stop.round = early_stopping)
 
 pred10 = predict(bst,x[teind,])
 
@@ -190,4 +195,4 @@ predTotal = pred + pred2 + pred3 + pred4 + pred5 + pred6 + pred7 + pred8 + pred9
 # Output submission
 predTotal = format(predTotal, digits=8,scientific=F)
 submission = data.frame(Id = test$Id,Hazard=predTotal)
-write.csv(submission,file='../submissions/xgboost_model_15.csv', quote=FALSE,row.names=FALSE)
+write.csv(submission,file='../submissions/xgboost_model_16.csv', quote=FALSE,row.names=FALSE)
