@@ -20,6 +20,12 @@ y = train$Hazard
 
 allData = rbind(train[,-1],test[,-1])
 
+### Drop some columns
+allData$T1_V10 <- NULL
+allData$T1_V13 <- NULL
+allData$T2_V10 <- NULL
+allData$T2_V10 <- NULL
+
 ### convert categorical columns
 allData$T1_V6[allData$T1_V6 == "Y"] = 1
 allData$T1_V6[allData$T1_V6 == "N"]  = 0
@@ -76,14 +82,14 @@ teind = (nrow(train)+1):nrow(x)
 param <- list("objective" = "reg:linear",
               "nthread" = 8,
               "bst:eta" = .01,
-              "bst:max_depth" = 7,
+              "bst:max_depth" = 8,
               "min_child_weight" = 5,
               "subsample" = .8,
-              "colsample_bytree" = .85,
+              "colsample_bytree" = .8,
               "scale_pos_weight" = 1)
 offset = 5000
 nround = 2000
-early_stopping = 6
+early_stopping = 50
 
 y = log(y)
 xgtrain = xgb.DMatrix(data = x[1:offset,], label=y[1:offset])
@@ -94,7 +100,7 @@ watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
                 watchlist=watchlist, maximize = FALSE,
                 early.stop.round = early_stopping)
-# [343]	valid-rmse:0.859354	train-rmse:0.712776
+# [353]	valid-rmse:0.859181	train-rmse:0.673728
 pred = predict(bst,x[teind,])
 
 
@@ -105,7 +111,7 @@ watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
                 watchlist=watchlist, maximize = FALSE,
                 early.stop.round = early_stopping)
-# [390]	valid-rmse:0.859778	train-rmse:0.694992
+# [403]	valid-rmse:0.860112	train-rmse:0.649056
 pred2 = predict(bst,x[teind,])
 
 testList = (offset*2+1):(offset*3)
@@ -115,7 +121,7 @@ watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
                 watchlist=watchlist, maximize = FALSE,
                 early.stop.round = early_stopping)
-# [378]	valid-rmse:0.863936	train-rmse:0.686310
+# [430]	valid-rmse:0.864928	train-rmse:0.627166
 pred3 = predict(bst,x[teind,])
 
 testList = (offset*3+1):(offset*4)
@@ -125,7 +131,7 @@ watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
                 watchlist=watchlist, maximize = FALSE,
                 early.stop.round = early_stopping)
-# [345]	valid-rmse:0.861462	train-rmse:0.709846
+# [472]	valid-rmse:0.861270	train-rmse:0.628832
 pred4 = predict(bst,x[teind,])
 
 testList = (offset*4+1):(offset*5)
@@ -135,7 +141,7 @@ watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
                 watchlist=watchlist, maximize = FALSE,
                 early.stop.round = early_stopping)
-# [380]	valid-rmse:0.860034	train-rmse:0.698456
+# [368]	valid-rmse:0.860904	train-rmse:0.666872
 pred5 = predict(bst,x[teind,])
 
 testList = (offset*5+1):(offset*6)
@@ -145,7 +151,7 @@ watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
                 watchlist=watchlist, maximize = FALSE,
                 early.stop.round = early_stopping)
-# [400]	valid-rmse:0.858962	train-rmse:0.695149
+# [400]	valid-rmse:0.859855	train-rmse:0.654725
 pred6 = predict(bst,x[teind,])
 
 testList = (offset*6+1):(offset*7)
@@ -155,7 +161,7 @@ watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
                 watchlist=watchlist, maximize = FALSE,
                 early.stop.round = early_stopping)
-# [389]	valid-rmse:0.862119	train-rmse:0.701176
+# [410]	valid-rmse:0.862775	train-rmse:0.653875
 pred7 = predict(bst,x[teind,])
 
 testList = (offset*7+1):(offset*8)
@@ -165,7 +171,7 @@ watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
                 watchlist=watchlist, maximize = FALSE,
                 early.stop.round = early_stopping)
-# [333]	valid-rmse:0.860951	train-rmse:0.704682
+# [363]	valid-rmse:0.861788	train-rmse:0.656535
 pred8 = predict(bst,x[teind,])
 
 testList = (offset*8+1):(offset*9)
@@ -175,7 +181,7 @@ watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
                 watchlist=watchlist, maximize = FALSE,
                 early.stop.round = early_stopping)
-# [319]	valid-rmse:0.861260	train-rmse:0.724595
+# [353]	valid-rmse:0.861555	train-rmse:0.675689
 pred9 = predict(bst,x[teind,])
 
 testList = (offset*9+1):nrow(train)
@@ -185,7 +191,7 @@ watchlist = list(valid = xgval, train = xgtrain)
 bst = xgb.train(param=param, data = xgtrain, nrounds=nround,
                 watchlist=watchlist, maximize = FALSE,
                 early.stop.round = early_stopping)
-# [404]	valid-rmse:0.860048	train-rmse:0.722348
+# [480]	valid-rmse:0.860085	train-rmse:0.663390
 pred10 = predict(bst,x[teind,])
 
 
@@ -194,4 +200,4 @@ predTotal = pred + pred2 + pred3 + pred4 + pred5 + pred6 + pred7 + pred8 + pred9
 # Output submission
 predTotal = format(predTotal, digits=8,scientific=F)
 submission = data.frame(Id = test$Id,Hazard=predTotal)
-write.csv(submission,file='../submissions/xgboost_model_18.csv', quote=FALSE,row.names=FALSE)
+write.csv(submission,file='../submissions/xgboost_model_19.csv', quote=FALSE,row.names=FALSE)
