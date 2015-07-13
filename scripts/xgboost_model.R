@@ -82,7 +82,7 @@ teind = (nrow(train)+1):nrow(x)
 param <- list("objective" = "reg:linear",
               "nthread" = 8,
               "bst:eta" = .01,
-              "bst:max_depth" = 8,
+              "bst:max_depth" = 9,
               "min_child_weight" = 5,
               "subsample" = .8,
               "colsample_bytree" = .8,
@@ -200,4 +200,4 @@ predTotal = pred + pred2 + pred3 + pred4 + pred5 + pred6 + pred7 + pred8 + pred9
 # Output submission
 predTotal = format(predTotal, digits=8,scientific=F)
 submission = data.frame(Id = test$Id,Hazard=predTotal)
-write.csv(submission,file='../submissions/xgboost_model_23.csv', quote=FALSE,row.names=FALSE)
+write.csv(submission,file='../submissions/xgboost_model_24.csv', quote=FALSE,row.names=FALSE)
