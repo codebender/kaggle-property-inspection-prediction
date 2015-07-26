@@ -20,12 +20,13 @@ def xgboost_pred(train,labels,test):
 	params = {}
 	params["objective"] = "reg:linear"
 	params["eta"] = 0.005
-	params["min_child_weight"] =6
+	params["min_child_weight"] = 6
 	params["subsample"] = 0.7
 	params["colsample_bytree"] = 0.7
-	params["scale_pos_weight"] = 1.0
+	params["scale_pos_weight"] = 1
 	params["silent"] = 1
 	params["max_depth"] = 9
+
 
 	plst = list(params.items())
 
@@ -41,8 +42,8 @@ def xgboost_pred(train,labels,test):
 
 	#train using early stopping and predict
 	watchlist = [(xgtrain, 'train'),(xgval, 'val')]
-	model = xgb.train(plst, xgtrain, num_rounds, watchlist, early_stopping_rounds=80)
-	preds1 = model.predict(xgtest)
+	model = xgb.train(plst, xgtrain, num_rounds, watchlist, early_stopping_rounds=120)
+	preds1 = model.predict(xgtest,ntree_limit=model.best_iteration)
 
 
 	#reverse train and labels and use different 5k for early stopping.
@@ -54,13 +55,13 @@ def xgboost_pred(train,labels,test):
 	xgval = xgb.DMatrix(train[:offset,:], label=labels[:offset])
 
 	watchlist = [(xgtrain, 'train'),(xgval, 'val')]
-	model = xgb.train(plst, xgtrain, num_rounds, watchlist, early_stopping_rounds=80)
-	preds2 = model.predict(xgtest)
+	model = xgb.train(plst, xgtrain, num_rounds, watchlist, early_stopping_rounds=120)
+	preds2 = model.predict(xgtest,ntree_limit=model.best_iteration)
 
 
 	#combine predictions
 	#since the metric only cares about relative rank we don't need to average
-	preds = preds1*2.6 + preds2*7.4
+	preds = preds1*1.6 + preds2*8.4
 	return preds
 
 #load train and test
@@ -117,9 +118,9 @@ test = vec.transform(test)
 preds2 = xgboost_pred(train,labels,test)
 
 
-preds = 0.58 * preds1 + 0.42 * preds2
+preds = 0.48 * preds1 + 0.52 * preds2
 
 #generate solution
 preds = pd.DataFrame({"Id": test_ind, "Hazard": preds})
 preds = preds.set_index('Id')
-preds.to_csv('../submissions/xgboost_tuned.csv')
+preds.to_csv('../submissions/xgboost_tuned_2.csv')
